@@ -13,7 +13,7 @@ const LoginLinks = () => {
   }
 
   return (
-    <div className="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+    <div className="hidden fixed top-0 right-0 px-6 py-8 sm:block">
       {user ? (
         <>
           {user.system_role_id === 1 ? (

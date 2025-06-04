@@ -1,225 +1,491 @@
+"use client";
 import LoginLinks from "@/app/LoginLinks.jsx";
-
-export const metadata = {
-  title: "Laravel",
-};
+import { useState } from "react";
+import PlansPage from "./(guest)/plans/page";
 
 const Home = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <>
-      <div className="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
-        <LoginLinks />
+    <div className="min-h-screen scroll-smooth bg-[#FDFDFC] text-[#1b1b18] ">
+      {/* Header */}
+      <header className="bg-opacity-95 fixed top-0 left-0 z-50 w-full bg-white shadow-md">
+        <div className="mx-auto w-full max-w-7xl p-4 text-sm">
+          <nav className="flex flex-wrap items-center justify-between py-2">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ff6b6b]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              </div>
+              <span className="text-xl font-bold text-[#333] ">BirthCare</span>
+            </div>
 
-        <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
-          <div className="flex justify-center pt-8 sm:justify-start sm:pt-0">
-            <svg
-              viewBox="0 0 651 192"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-16 w-auto text-gray-700 sm:h-20"
+            {/* Desktop Links */}
+            <div className="hidden items-center gap-8 md:flex">
+              <a
+                href="#home"
+                className="font-medium text-[#555] transition-colors duration-300 hover:text-[#ff6b6b]"
+              >
+                Home
+              </a>
+              <a
+                href="#services"
+                className="font-medium text-[#555] transition-colors duration-300 hover:text-[#ff6b6b] "
+              >
+                Services
+              </a>
+              <a
+                href="#pricing"
+                className="font-medium text-[#555] transition-colors duration-300 hover:text-[#ff6b6b] "
+              >
+                Pricing
+              </a>
+              <a
+                href="#about"
+                className="font-medium text-[#555] transition-colors duration-300 hover:text-[#ff6b6b] "
+              >
+                About
+              </a>
+            </div>
+
+            {/* Desktop Auth Buttons */}
+            <div className="hidden items-center gap-4 md:flex">
+              <LoginLinks />
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="focus:outline-none md:hidden"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
             >
-              <g clipPath="url(#clip0)" fill="#EF3B2D">
-                <path d="M248.032 44.676h-16.466v100.23h47.394v-14.748h-30.928V44.676zM337.091 87.202c-2.101-3.341-5.083-5.965-8.949-7.875-3.865-1.909-7.756-2.864-11.669-2.864-5.062 0-9.69.931-13.89 2.792-4.201 1.861-7.804 4.417-10.811 7.661-3.007 3.246-5.347 6.993-7.016 11.239-1.672 4.249-2.506 8.713-2.506 13.389 0 4.774.834 9.26 2.506 13.459 1.669 4.202 4.009 7.925 7.016 11.169 3.007 3.246 6.609 5.799 10.811 7.66 4.199 1.861 8.828 2.792 13.89 2.792 3.913 0 7.804-.955 11.669-2.863 3.866-1.908 6.849-4.533 8.949-7.875v9.021h15.607V78.182h-15.607v9.02zm-1.431 32.503c-.955 2.578-2.291 4.821-4.009 6.73-1.719 1.91-3.795 3.437-6.229 4.582-2.435 1.146-5.133 1.718-8.091 1.718-2.96 0-5.633-.572-8.019-1.718-2.387-1.146-4.438-2.672-6.156-4.582-1.719-1.909-3.032-4.152-3.938-6.73-.909-2.577-1.36-5.298-1.36-8.161 0-2.864.451-5.585 1.36-8.162.905-2.577 2.219-4.819 3.938-6.729 1.718-1.908 3.77-3.437 6.156-4.582 2.386-1.146 5.059-1.718 8.019-1.718 2.958 0 5.656.572 8.091 1.718 2.434 1.146 4.51 2.674 6.229 4.582 1.718 1.91 3.054 4.152 4.009 6.729.953 2.577 1.432 5.298 1.432 8.162-.001 2.863-.479 5.584-1.432 8.161zM463.954 87.202c-2.101-3.341-5.083-5.965-8.949-7.875-3.865-1.909-7.756-2.864-11.669-2.864-5.062 0-9.69.931-13.89 2.792-4.201 1.861-7.804 4.417-10.811 7.661-3.007 3.246-5.347 6.993-7.016 11.239-1.672 4.249-2.506 8.713-2.506 13.389 0 4.774.834 9.26 2.506 13.459 1.669 4.202 4.009 7.925 7.016 11.169 3.007 3.246 6.609 5.799 10.811 7.66 4.199 1.861 8.828 2.792 13.89 2.792 3.913 0 7.804-.955 11.669-2.863 3.866-1.908 6.849-4.533 8.949-7.875v9.021h15.607V78.182h-15.607v9.02zm-1.432 32.503c-.955 2.578-2.291 4.821-4.009 6.73-1.719 1.91-3.795 3.437-6.229 4.582-2.435 1.146-5.133 1.718-8.091 1.718-2.96 0-5.633-.572-8.019-1.718-2.387-1.146-4.438-2.672-6.156-4.582-1.719-1.909-3.032-4.152-3.938-6.73-.909-2.577-1.36-5.298-1.36-8.161 0-2.864.451-5.585 1.36-8.162.905-2.577 2.219-4.819 3.938-6.729 1.718-1.908 3.77-3.437 6.156-4.582 2.386-1.146 5.059-1.718 8.019-1.718 2.958 0 5.656.572 8.091 1.718 2.434 1.146 4.51 2.674 6.229 4.582 1.718 1.91 3.054 4.152 4.009 6.729.953 2.577 1.432 5.298 1.432 8.162 0 2.863-.479 5.584-1.432 8.161zM650.772 44.676h-15.606v100.23h15.606V44.676zM365.013 144.906h15.607V93.538h26.776V78.182h-42.383v66.724zM542.133 78.182l-19.616 51.096-19.616-51.096h-15.808l25.617 66.724h19.614l25.617-66.724h-15.808zM591.98 76.466c-19.112 0-34.239 15.706-34.239 35.079 0 21.416 14.641 35.079 36.239 35.079 12.088 0 19.806-4.622 29.234-14.688l-10.544-8.158c-.006.008-7.958 10.449-19.832 10.449-13.802 0-19.612-11.127-19.612-16.884h51.777c2.72-22.043-11.772-40.877-33.023-40.877zm-18.713 29.28c.12-1.284 1.917-16.884 18.589-16.884 16.671 0 18.697 15.598 18.813 16.884h-37.402zM184.068 43.892c-.024-.088-.073-.165-.104-.25-.058-.157-.108-.316-.191-.46-.056-.097-.137-.176-.203-.265-.087-.117-.161-.242-.265-.345-.085-.086-.194-.148-.29-.223-.109-.085-.206-.182-.327-.252l-.002-.001-.002-.002-35.648-20.524a2.971 2.971 0 00-2.964 0l-35.647 20.522-.002.002-.002.001c-.121.07-.219.167-.327.252-.096.075-.205.138-.29.223-.103.103-.178.228-.265.345-.066.089-.147.169-.203.265-.083.144-.133.304-.191.46-.031.085-.08.162-.104.25-.067.249-.103.51-.103.776v38.979l-29.706 17.103V24.493a3 3 0 00-.103-.776c-.024-.088-.073-.165-.104-.25-.058-.157-.108-.316-.191-.46-.056-.097-.137-.176-.203-.265-.087-.117-.161-.242-.265-.345-.085-.086-.194-.148-.29-.223-.109-.085-.206-.182-.327-.252l-.002-.001-.002-.002L40.098 1.396a2.971 2.971 0 00-2.964 0L1.487 21.919l-.002.002-.002.001c-.121.07-.219.167-.327.252-.096.075-.205.138-.29.223-.103.103-.178.228-.265.345-.066.089-.147.169-.203.265-.083.144-.133.304-.191.46-.031.085-.08.162-.104.25-.067.249-.103.51-.103.776v122.09c0 1.063.568 2.044 1.489 2.575l71.293 41.045c.156.089.324.143.49.202.078.028.15.074.23.095a2.98 2.98 0 001.524 0c.069-.018.132-.059.2-.083.176-.061.354-.119.519-.214l71.293-41.045a2.971 2.971 0 001.489-2.575v-38.979l34.158-19.666a2.971 2.971 0 001.489-2.575V44.666a3.075 3.075 0 00-.106-.774zM74.255 143.167l-29.648-16.779 31.136-17.926.001-.001 34.164-19.669 29.674 17.084-21.772 12.428-43.555 24.863zm68.329-76.259v33.841l-12.475-7.182-17.231-9.92V49.806l12.475 7.182 17.231 9.92zm2.97-39.335l29.693 17.095-29.693 17.095-29.693-17.095 29.693-17.095zM54.06 114.089l-12.475 7.182V46.733l17.231-9.92 12.475-7.182v74.537l-17.231 9.921zM38.614 7.398l29.693 17.095-29.693 17.095L8.921 24.493 38.614 7.398zM5.938 29.632l12.475 7.182 17.231 9.92v79.676l.001.005-.001.006c0 .114.032.221.045.333.017.146.021.294.059.434l.002.007c.032.117.094.222.14.334.051.124.088.255.156.371a.036.036 0 00.004.009c.061.105.149.191.222.288.081.105.149.22.244.314l.008.01c.084.083.19.142.284.215.106.083.202.178.32.247l.013.005.011.008 34.139 19.321v34.175L5.939 144.867V29.632h-.001zm136.646 115.235l-65.352 37.625V148.31l48.399-27.628 16.953-9.677v33.862zm35.646-61.22l-29.706 17.102V66.908l17.231-9.92 12.475-7.182v33.841z" />
-              </g>
-            </svg>
+              <svg
+                className="h-6 w-6 text-[#333] "
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {isOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          </nav>
+
+          {/* Mobile Menu Links */}
+          {isOpen && (
+            <div className="mt-4 space-y-2 rounded-lg bg-white p-4 shadow-lg md:hidden">
+              <a
+                href="#home"
+                className="block px-4 py-3 font-medium hover:bg-[#f9f9f9] hover:text-[#ff6b6b] "
+              >
+                Home
+              </a>
+              <a
+                href="#services"
+                className="block px-4 py-3 font-medium hover:bg-[#f9f9f9] hover:text-[#ff6b6b] "
+              >
+                Services
+              </a>
+              <a
+                href="#pricing"
+                className="block px-4 py-3 font-medium hover:bg-[#f9f9f9] hover:text-[#ff6b6b] "
+              >
+                Pricing
+              </a>
+              <a
+                href="#about"
+                className="block px-4 py-3 font-medium hover:bg-[#f9f9f9] hover:text-[#ff6b6b]"
+              >
+                About
+              </a>
+
+              <div>
+                <LoginLinks />
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
+      {/* Hero Section with Mother and Baby Background */}
+      <section
+        id="home"
+        className="relative flex min-h-screen items-center justify-center bg-cover bg-center px-4 py-20 text-center"
+        style={{
+          backgroundImage: "url('/birth.jpg')",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60"></div>
+
+        <div className="relative z-10 mx-auto max-w-4xl">
+          <h1 className="mb-4 text-5xl font-bold text-white drop-shadow-lg">
+            Welcome to BirthCare
+          </h1>
+          <p className="mx-auto mb-8 max-w-2xl text-xl text-white drop-shadow-md">
+            Your trusted partner in prenatal, childbirth, and postnatal care.
+            Experience compassionate service every step of the way.
+          </p>
+          <a
+            href="/register"
+            className="transform rounded-md bg-[#ff6b6b] px-8 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#ff5252]"
+          >
+            Get Started
+          </a>
+        </div>
+      </section>
+      {/* Services Section with Gradient Background */}
+      <section
+        id="services"
+        className="min-h-screen bg-gradient-to-b from-[#f9f9f9] to-[#e6f7ff] px-4 py-20"
+      >
+        <div className="mx-auto max-w-6xl">
+          <h2 className="relative mb-16 text-center text-4xl font-bold text-[#333]">
+            Our Services
+            <span className="mx-auto mt-4 block h-1 w-24 bg-[#ff6b6b]"></span>
+          </h2>
+          <div className="grid gap-8 md:grid-cols-3">
+            <div className="transform rounded-xl border-0 bg-white p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#ffe0e0]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-[#ff6b6b]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  />
+                </svg>
+              </div>
+              <h3 className="mb-4 text-center text-2xl font-bold">
+                Prenatal Care
+              </h3>
+              <p className="text-center text-gray-600">
+                Regular check-ups, nutritional advice, and emotional support
+                during your pregnancy journey.
+              </p>
+            </div>
+            <div className="transform rounded-xl border-0 bg-white p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#e0f0ff]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-[#4d8cff]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <h3 className="mb-4 text-center text-2xl font-bold">
+                Childbirth Assistance
+              </h3>
+              <p className="text-center text-gray-600">
+                Skilled professionals to guide you through labor and delivery,
+                ensuring a safe birth experience.
+              </p>
+            </div>
+            <div className="transform rounded-xl border-0 bg-white p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#e0ffe6]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-[#4dff88]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              </div>
+              <h3 className="mb-4 text-center text-2xl font-bold">
+                Postnatal Support
+              </h3>
+              <p className="text-center text-gray-600">
+                Help and care during the recovery period and early days with
+                your newborn.
+              </p>
+            </div>
           </div>
-
-          <div className="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="p-6">
-                <div className="flex items-center">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
+        </div>
+      </section>
+      {/* Pricing Section with Background Image */}
+      <section>
+        <PlansPage id="pricing" />
+      </section>
+      {/* About Section with Background */}
+      <section
+        id="about"
+        className="relative bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef] px-4 py-24"
+      >
+        <div className="relative z-10 mx-auto max-w-4xl">
+          <h2 className="relative mb-10 text-center text-4xl font-bold text-[#333]">
+            About BirthCare
+            <span className="mx-auto mt-4 block h-1 w-24 bg-[#ff6b6b]"></span>
+          </h2>
+          <div className="rounded-xl bg-white p-10 shadow-xl">
+            <p className="text-center text-lg leading-relaxed text-gray-700">
+              BirthCare was founded to empower mothers and families by
+              delivering accessible, quality maternal care. Our team of
+              dedicated professionals is committed to guiding you through each
+              stage of motherhood with empathy, expertise, and personalized
+              attention.
+            </p>
+            <div className="mt-8 flex justify-center space-x-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#f0f7ff]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-[#4d8cff]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    className="w-8 h-8 text-gray-500"
-                  >
-                    <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-
-                  <div className="ml-4 text-lg leading-7 font-semibold">
-                    <a
-                      href="https://laravel.com/docs"
-                      className="underline text-gray-900 dark:text-white"
-                    >
-                      Documentation
-                    </a>
-                  </div>
-                </div>
-
-                <div className="ml-12">
-                  <div className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                    Laravel has wonderful, thorough documentation covering every
-                    aspect of the framework. Whether you are new to the
-                    framework or have previous experience with Laravel, we
-                    recommend reading all of the documentation from beginning to
-                    end.
-                  </div>
-                </div>
+                    strokeWidth={2}
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
               </div>
-
-              <div className="p-6 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l">
-                <div className="flex items-center">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#fff0f0]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-[#ff6b6b]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    className="w-8 h-8 text-gray-500"
-                  >
-                    <path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-
-                  <div className="ml-4 text-lg leading-7 font-semibold">
-                    <a
-                      href="https://laracasts.com"
-                      className="underline text-gray-900 dark:text-white"
-                    >
-                      Laracasts
-                    </a>
-                  </div>
-                </div>
-
-                <div className="ml-12">
-                  <div className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                    Laracasts offers thousands of video tutorials on Laravel,
-                    PHP, and JavaScript development. Check them out, see for
-                    yourself, and massively level up your development skills in
-                    the process.
-                  </div>
-                </div>
+                    strokeWidth={2}
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
               </div>
-
-              <div className="p-6 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex items-center">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#f0fff4]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-[#4dff88]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    className="w-8 h-8 text-gray-500"
-                  >
-                    <path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-                  </svg>
-
-                  <div className="ml-4 text-lg leading-7 font-semibold">
-                    <a
-                      href="https://laravel-news.com/"
-                      className="underline text-gray-900 dark:text-white"
-                    >
-                      Laravel News
-                    </a>
-                  </div>
-                </div>
-
-                <div className="ml-12">
-                  <div className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                    Laravel News is a community driven portal and newsletter
-                    aggregating all of the latest and most important news in the
-                    Laravel ecosystem, including new package releases and
-                    tutorials.
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
-                <div className="flex items-center">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
+                    strokeWidth={2}
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    className="w-8 h-8 text-gray-500"
-                  >
-                    <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-
-                  <div className="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">
-                    Vibrant Ecosystem
-                  </div>
-                </div>
-
-                <div className="ml-12">
-                  <div className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                    Laravel&apos;s robust library of first-party tools and
-                    libraries, such as{" "}
-                    <a href="https://forge.laravel.com" className="underline">
-                      Forge
-                    </a>
-                    ,{" "}
-                    <a href="https://vapor.laravel.com" className="underline">
-                      Vapor
-                    </a>
-                    ,{" "}
-                    <a href="https://nova.laravel.com" className="underline">
-                      Nova
-                    </a>
-                    , and{" "}
-                    <a href="https://envoyer.io" className="underline">
-                      Envoyer
-                    </a>{" "}
-                    help you take your projects to the next level. Pair them
-                    with powerful open source libraries like{" "}
-                    <a
-                      href="https://laravel.com/docs/billing"
-                      className="underline"
-                    >
-                      Cashier
-                    </a>
-                    ,{" "}
-                    <a
-                      href="https://laravel.com/docs/dusk"
-                      className="underline"
-                    >
-                      Dusk
-                    </a>
-                    ,{" "}
-                    <a
-                      href="https://laravel.com/docs/broadcasting"
-                      className="underline"
-                    >
-                      Echo
-                    </a>
-                    ,{" "}
-                    <a
-                      href="https://laravel.com/docs/horizon"
-                      className="underline"
-                    >
-                      Horizon
-                    </a>
-                    ,{" "}
-                    <a
-                      href="https://laravel.com/docs/sanctum"
-                      className="underline"
-                    >
-                      Sanctum
-                    </a>
-                    ,{" "}
-                    <a
-                      href="https://laravel.com/docs/telescope"
-                      className="underline"
-                    >
-                      Telescope
-                    </a>
-                    , and more.
-                  </div>
-                </div>
+                    strokeWidth={2}
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
+      </section>
+      {/* Testimonials Section */}
+      <section className="bg-[#f9f0ff] px-4 py-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="relative mb-16 text-center text-4xl font-bold text-[#333]">
+            What Mothers Say
+            <span className="mx-auto mt-4 block h-1 w-24 bg-[#9d4edd]"></span>
+          </h2>
+          <div className="grid gap-8 md:grid-cols-2">
+            <div className="rounded-xl bg-white p-8 shadow-lg">
+              <div className="mb-4 flex items-center">
+                <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#e0e0e0]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-[#9d4edd]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="font-bold">Maria Santos</h4>
+                  <p className="text-sm text-gray-500">First-time mother</p>
+                </div>
+              </div>
+              <p className="text-gray-700 italic">
+                "The team at BirthCare made my first pregnancy journey so much
+                easier. Their support and expertise gave me confidence when I
+                needed it most."
+              </p>
+            </div>
+            <div className="rounded-xl bg-white p-8 shadow-lg">
+              <div className="mb-4 flex items-center">
+                <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#e0e0e0]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-[#9d4edd]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="font-bold">Ana Reyes</h4>
+                  <p className="text-sm text-gray-500">Mother of twins</p>
+                </div>
+              </div>
+              <p className="text-gray-700 italic">
+                "I don't know how I would have managed the birth of my twins
+                without BirthCare. Their postnatal support was absolutely
+                essential for my recovery."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* CTA Section */}
+      <section
+        className="relative py-20"
+        style={{
+          backgroundImage: "url('/api/placeholder/1920/1080')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-[#ff6b6b] opacity-90"></div>
+        <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
+          <h2 className="mb-6 text-4xl font-bold text-white">
+            Begin Your Journey With Us
+          </h2>
+          <p className="mx-auto mb-8 max-w-2xl text-xl text-white">
+            Every mother deserves quality care throughout her pregnancy journey.
+            Join our community today.
+          </p>
+          <a
+            href="/register"
+            className="transform rounded-md bg-white px-8 py-3 font-semibold text-[#ff6b6b] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-gray-100"
+          >
+            Register Now
+          </a>
+        </div>
+      </section>
+      {/* Footer with Enhanced Styling */}
+      <footer className="bg-[#1a1a1a] py-12 text-center text-white">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="mb-8 flex flex-col items-center justify-between md:flex-row">
+            <div className="mb-6 md:mb-0">
+              <h3 className="mb-2 text-2xl font-bold">BirthCare</h3>
+              <p className="text-gray-400">
+                Your trusted maternal care partner
+              </p>
+            </div>
+            <div className="flex space-x-4">
+              <a
+                href="#"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#333] transition-colors duration-300 hover:bg-[#ff6b6b]"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
+                </svg>
+              </a>
+              <a
+                href="#"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#333] transition-colors duration-300 hover:bg-[#ff6b6b]"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                </svg>
+              </a>
+              <a
+                href="#"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#333] transition-colors duration-300 hover:bg-[#ff6b6b]"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 pt-8">
+            <p className="text-gray-400">
+              © {new Date().getFullYear()} BirthCare. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 };
 
