@@ -4,13 +4,15 @@ import { useAuth } from "@/hooks/auth.jsx";
 import Navigation from "@/app/(owner)/Navigation.jsx";
 import Loading from "@/components/Loading.jsx";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const AppLayout = ({ children }) => {
   const { user } = useAuth({ middleware: "auth" });
   const router = useRouter();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // Redirect non-admin users to homepage
+  // Redirect non-owner users to homepage (keeping original role logic)
   useEffect(() => {
     if (user && user.system_role_id !== 2) {
       router.push("/");
@@ -22,16 +24,16 @@ const AppLayout = ({ children }) => {
     return <Loading />;
   }
 
-  // Prevent rendering for non-admin users until redirect occurs
+  // Prevent rendering for non-owner users until redirect occurs
   if (user.system_role_id !== 2) {
     return null;
   }
 
-  // Render admin layout for users with system_role_id === 1
+  // Render owner layout with new navigation design
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       <Navigation user={user} />
-      <main>{children}</main>
+      <main className="lg:ml-72 transition-all duration-300">{children}</main>
     </div>
   );
 };

@@ -43,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Birthcare
         Route::get('/birthcare', [BirthcareController::class, 'getBirthcare']);
         Route::post('/register-birthcare', [BirthcareController::class, 'register']);
+        Route::put('/birthcare/{id}', [BirthcareController::class, 'update']);
         Route::get('/birthcare/approval-status', [BirthcareController::class, 'checkApprovalStatus']);
     });
     

@@ -157,7 +157,7 @@ export default function RegisterBirthcare() {
   // No active subscription
   if (!hasActiveSubscription && !subscriptionError) {
     return (
-      <div className="max-w-2xl mx-auto my-8 p-6 bg-white rounded-lg shadow">
+      <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Subscription Required
         </h1>
@@ -197,7 +197,7 @@ export default function RegisterBirthcare() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto my-8 p-6 bg-white rounded-lg shadow">
+    <div className="bg-white rounded-lg shadow p-6">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">
         Register Your Birthcare Facility
       </h1>

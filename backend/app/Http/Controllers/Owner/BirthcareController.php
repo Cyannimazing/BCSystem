@@ -22,7 +22,8 @@ class BirthcareController extends Controller
     {
         $user = $request->user();
         
-        $subscription = BirthCareSubscription::where('user_id', $user->id)
+        $subscription = BirthCareSubscription::with('plan')
+            ->where('user_id', $user->id)
             ->where('status', 'active')
             ->orderBy('created_at', 'desc')
             ->first();
@@ -37,7 +38,7 @@ class BirthcareController extends Controller
         return response()->json([
             'status' => 'active',
             'subscription' => $subscription,
-            'expires_at' => $subscription->expires_at,
+            'expires_at' => $subscription->end_date,
         ]);
     }
     
@@ -140,6 +141,67 @@ class BirthcareController extends Controller
             
             return response()->json([
                 'message' => 'Failed to register birthcare facility. Please try again.'
+            ], 500);
+        }
+    }
+    
+    /**
+     * Update birthcare facility information
+     */
+    public function update(Request $request, $id)
+    {
+        $user = $request->user();
+        
+        // Find the birthcare facility
+        $birthcare = BirthCare::where('id', $id)
+            ->where('user_id', $user->id)
+            ->first();
+        
+        if (!$birthcare) {
+            return response()->json([
+                'message' => 'Birthcare facility not found or you do not have permission to update it.'
+            ], 404);
+        }
+        
+        // Validate the request
+        $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string|max:1000',
+            'latitude' => 'sometimes|numeric',
+            'longitude' => 'sometimes|numeric',
+            'is_public' => 'sometimes|boolean',
+        ]);
+        
+        // Update only the fields that are provided
+        $updateData = [];
+        if ($request->has('name')) {
+            $updateData['name'] = $request->name;
+        }
+        if ($request->has('description')) {
+            $updateData['description'] = $request->description;
+        }
+        if ($request->has('latitude')) {
+            $updateData['latitude'] = $request->latitude;
+        }
+        if ($request->has('longitude')) {
+            $updateData['longitude'] = $request->longitude;
+        }
+        if ($request->has('is_public')) {
+            $updateData['is_public'] = $request->is_public;
+        }
+        
+        try {
+            $birthcare->update($updateData);
+            
+            return response()->json([
+                'message' => 'Birthcare facility updated successfully.',
+                'birthcare' => $birthcare
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Birthcare update failed: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Failed to update birthcare facility. Please try again.'
             ], 500);
         }
     }

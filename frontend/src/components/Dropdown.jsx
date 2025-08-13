@@ -5,6 +5,7 @@ const Dropdown = ({
   align = "right",
   width = 48,
   contentClasses = "py-1 bg-white",
+  position = "bottom",
   trigger,
   children,
 }) => {
@@ -14,11 +15,28 @@ const Dropdown = ({
     case "48":
       width = "w-48";
       break;
+    case "56":
+      width = "w-56";
+      break;
+    case "full":
+      width = "w-full";
+      break;
+  }
+
+  let positionClasses;
+  switch (position) {
+    case "top":
+      positionClasses = "mb-2 bottom-full";
+      break;
+    case "bottom":
+    default:
+      positionClasses = "mt-2 top-full";
+      break;
   }
 
   switch (align) {
     case "left":
-      alignmentClasses = "origin-top-left left-0";
+      alignmentClasses = width === "w-full" ? "origin-top-left left-0 right-0" : "origin-top-left left-0";
       break;
     case "top":
       alignmentClasses = "origin-top";
@@ -33,7 +51,9 @@ const Dropdown = ({
     <Menu as="div" className="relative">
       {({ open }) => (
         <>
-          <Menu.Button as={React.Fragment}>{trigger}</Menu.Button>
+          <Menu.Button as={React.Fragment}>
+            {typeof trigger === 'function' ? trigger({ open }) : trigger}
+          </Menu.Button>
 
           <Transition
             show={open}
@@ -45,7 +65,7 @@ const Dropdown = ({
             leaveTo="transform opacity-0 scale-95"
           >
             <div
-              className={`absolute z-50 mt-2 ${width} rounded-md shadow-lg ${alignmentClasses}`}
+              className={`absolute z-50 ${positionClasses} ${width} rounded-md shadow-lg ${alignmentClasses}`}
             >
               <Menu.Items
                 className={`rounded-md focus:outline-none ring-1 ring-black ring-opacity-5 ${contentClasses}`}
