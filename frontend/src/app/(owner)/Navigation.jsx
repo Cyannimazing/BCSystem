@@ -196,9 +196,7 @@ const Navigation = ({ user }) => {
           {/* Header Section */}
           <div className="bg-white border-b border-gray-100 p-6">
             <div className="flex items-center space-x-3">
-              <div className="bg-slate-900 rounded-xl p-2.5">
-                <ApplicationLogo className="h-7 w-7 text-white" />
-              </div>
+              
               <div>
                 <h1 className="text-lg font-semibold text-gray-900">
                   Owner Panel
@@ -207,6 +205,7 @@ const Navigation = ({ user }) => {
                   Management System
                 </p>
               </div>
+              
             </div>
           </div>
 
