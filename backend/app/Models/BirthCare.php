@@ -14,6 +14,7 @@ class BirthCare extends Model
         'description',
         'is_public',
         'status',
+        'rejection_reason',
     ];
 
     protected $casts = [

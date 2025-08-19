@@ -157,48 +157,78 @@ export default function FacilityDashboard() {
 
   if (!birthcare) {
     return (
-      <div className="px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-xl drop-shadow-lg overflow-hidden">
-            <div className="bg-gray-50 p-6 border-b border-gray-200">
-              <div className="flex items-center justify-center">
-                <ExclamationTriangleIcon className="h-10 w-10 text-gray-500 mr-3" />
-                <h2 className="text-2xl font-bold text-gray-900">
+      <div className="h-screen w-full overflow-hidden flex flex-col">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-full flex flex-col">
+            {/* Header Section */}
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex-shrink-0">
+              <div className="flex items-center justify-center text-center">
+                <ExclamationTriangleIcon className="h-8 w-8 text-amber-500 mr-2 flex-shrink-0" />
+                <h2 className="text-xl font-semibold text-gray-900">
                   No Birthcare Facility Found
                 </h2>
               </div>
             </div>
 
-            <div className="p-8">
-              <div className="flex flex-col items-center mb-8">
-                <BuildingOffice2Icon className="h-24 w-24 text-gray-300 mb-6" />
-                <p className="text-gray-600 text-lg text-center mb-2">
+            {/* Content Section */}
+            <div className="flex-1 px-6 py-6 flex flex-col justify-center overflow-hidden">
+              {/* Icon and Main Message */}
+              <div className="text-center mb-8">
+                <div className="flex justify-center mb-4">
+                  <div className="bg-gray-100 rounded-full p-4">
+                    <BuildingOffice2Icon className="h-16 w-16 text-gray-400" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Get Started with Your Facility
+                </h3>
+                <p className="text-gray-600 mb-1">
                   You haven't registered a birthcare facility yet.
                 </p>
-                <p className="text-gray-500 text-center mb-8">
-                  Register your facility to manage appointments, staff, and access
-                  powerful management tools.
+                <p className="text-gray-500 text-sm mb-6">
+                  Register your facility to manage appointments, staff, and access powerful management tools.
                 </p>
 
+                {/* CTA Button */}
                 <Link href="/register-birthcare" passHref>
-                  <Button className="flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white transition-all duration-200 px-8 py-3 rounded-lg shadow-md hover:shadow-lg">
+                  <Button className="inline-flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white transition-all duration-200 px-6 py-3 rounded-lg shadow-sm hover:shadow-md font-medium">
                     <PlusCircleIcon className="h-5 w-5" />
                     <span>Register Birthcare Facility</span>
                   </Button>
                 </Link>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                <h3 className="font-medium text-gray-700 mb-2 flex items-center">
-                  <CheckCircleIcon className="h-5 w-5 text-green-500 mr-2" />
-                  Benefits of Registration
-                </h3>
-                <ul className="text-sm text-gray-600 space-y-2 pl-7">
-                  <li>• Manage your facility staff and roles</li>
-                  <li>• Handle client appointments efficiently</li>
-                  <li>• Access analytics and reports</li>
-                  <li>• Showcase your services to potential clients</li>
-                </ul>
+              {/* Benefits Section */}
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100">
+                <h4 className="font-medium text-gray-800 mb-4 flex items-center">
+                  <CheckCircleIcon className="h-5 w-5 text-green-600 mr-2 flex-shrink-0" />
+                  What You'll Get
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div className="flex items-start text-sm">
+                    <span className="text-green-600 mr-2 font-medium">•</span>
+                    <span className="text-gray-700">Manage your facility staff and roles</span>
+                  </div>
+                  <div className="flex items-start text-sm">
+                    <span className="text-green-600 mr-2 font-medium">•</span>
+                    <span className="text-gray-700">Handle client appointments efficiently</span>
+                  </div>
+                  <div className="flex items-start text-sm">
+                    <span className="text-green-600 mr-2 font-medium">•</span>
+                    <span className="text-gray-700">Access analytics and detailed reports</span>
+                  </div>
+                  <div className="flex items-start text-sm">
+                    <span className="text-green-600 mr-2 font-medium">•</span>
+                    <span className="text-gray-700">Showcase your services to potential clients</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Info */}
+              <div className="mt-4 pt-4 border-t border-gray-100 text-center">
+                <p className="text-sm text-gray-500">
+                  Need help getting started? Contact our support team.
+                </p>
               </div>
             </div>
           </div>
@@ -210,8 +240,10 @@ export default function FacilityDashboard() {
   const isApproved = approvalStatus?.status === "approved";
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+          <div className="px-6 py-6">
         {/* Top Action Bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
@@ -234,8 +266,12 @@ export default function FacilityDashboard() {
             <div className="flex items-center space-x-3">
               <Button
                 onClick={handleToggleVisibility}
-                disabled={isTogglingVisibility}
-                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-all duration-200 shadow-md"
+                disabled={isTogglingVisibility || birthcare.status === "pending"}
+                className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-md ${
+                  birthcare.status === "pending"
+                    ? "bg-gray-400 cursor-not-allowed text-white"
+                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                }`}
               >
                 {isTogglingVisibility ? (
                   <div className="flex items-center space-x-2">
@@ -265,13 +301,13 @@ export default function FacilityDashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl drop-shadow-lg p-6">
+          <div className="bg-gray-50 rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Staff</p>
                 <p className="text-2xl font-bold text-gray-900">{staffCount}</p>
               </div>
-              <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="bg-white p-3 rounded-lg">
                 <UserGroupIcon className="h-6 w-6 text-gray-600" />
               </div>
             </div>
@@ -283,7 +319,7 @@ export default function FacilityDashboard() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl drop-shadow-lg p-6">
+          <div className="bg-gray-50 rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">
@@ -291,7 +327,7 @@ export default function FacilityDashboard() {
                 </p>
                 <p className="text-2xl font-bold text-gray-900">Coming Soon</p>
               </div>
-              <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="bg-white p-3 rounded-lg">
                 <UserIcon className="h-6 w-6 text-gray-600" />
               </div>
             </div>
@@ -303,7 +339,7 @@ export default function FacilityDashboard() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl drop-shadow-lg p-6">
+          <div className="bg-gray-50 rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">
@@ -311,7 +347,7 @@ export default function FacilityDashboard() {
                 </p>
                 <p className="text-2xl font-bold text-gray-900">Coming Soon</p>
               </div>
-              <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="bg-white p-3 rounded-lg">
                 <CalendarIcon className="h-6 w-6 text-gray-600" />
               </div>
             </div>
@@ -324,9 +360,79 @@ export default function FacilityDashboard() {
           </div>
         </div>
 
+        {/* Monthly Births Report - Top Position */}
+        <div className="mb-8">
+          <div className="bg-gray-50 rounded-xl border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Monthly Births Report
+              </h2>
+              <ChartBarIcon className="h-5 w-5 text-gray-400" />
+            </div>
+            <div className="space-y-4">
+              {/* Chart Container */}
+              <div className="relative h-48 bg-white rounded-lg p-4">
+                {/* Y-axis labels */}
+                <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500 py-4">
+                  <span>20</span>
+                  <span>15</span>
+                  <span>10</span>
+                  <span>5</span>
+                  <span>0</span>
+                </div>
+                
+                {/* Chart bars */}
+                <div className="ml-8 h-full flex items-end justify-between space-x-2">
+                  {[
+                    { month: 'Jan', value: 0 },
+                    { month: 'Feb', value: 0 },
+                    { month: 'Mar', value: 0 },
+                    { month: 'Apr', value: 0 },
+                    { month: 'May', value: 0 },
+                    { month: 'Jun', value: 0 }
+                  ].map((data, index) => (
+                    <div key={index} className="flex flex-col items-center flex-1">
+                      <div 
+                        className={`w-full rounded-t-sm transition-all duration-300 relative group ${
+                          data.value === 0 
+                            ? 'bg-gray-200 h-1' 
+                            : 'bg-blue-500 hover:bg-blue-600'
+                        }`}
+                        style={data.value > 0 ? { height: `${(data.value / 20) * 100}%` } : {}}
+                      >
+                        {/* Tooltip */}
+                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 transition-opacity z-10">
+                          {data.value} births
+                        </div>
+                      </div>
+                      <span className="text-xs text-gray-600 mt-2">{data.month}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Chart Summary */}
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                <div className="bg-white rounded-lg p-3">
+                  <div className="text-2xl font-bold text-blue-600">0</div>
+                  <div className="text-sm text-gray-600">Total Births</div>
+                </div>
+                <div className="bg-white rounded-lg p-3">
+                  <div className="text-2xl font-bold text-green-600">0</div>
+                  <div className="text-sm text-gray-600">This Month</div>
+                </div>
+                <div className="bg-white rounded-lg p-3">
+                  <div className="text-2xl font-bold text-purple-600">0.0</div>
+                  <div className="text-sm text-gray-600">Avg/Month</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Facility Name and Description */}
         <div className="mb-8">
-          <div className="bg-white rounded-xl drop-shadow-lg p-6">
+          <div className="bg-gray-50 rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">
                 Facility Details
@@ -428,9 +534,9 @@ export default function FacilityDashboard() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Facility Information */}
-          <div className="bg-white rounded-xl drop-shadow-lg p-6">
+          <div className="bg-gray-50 rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">
                 Facility Information
@@ -478,7 +584,7 @@ export default function FacilityDashboard() {
           </div>
 
           {/* Subscription Details */}
-          <div className="bg-white rounded-xl drop-shadow-lg p-6">
+          <div className="bg-gray-50 rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">
                 Subscription
@@ -533,7 +639,7 @@ export default function FacilityDashboard() {
           </div>
 
           {/* Documents */}
-          <div className="bg-white rounded-xl drop-shadow-lg p-6">
+          <div className="bg-gray-50 rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">Documents</h2>
               <DocumentTextIcon className="h-5 w-5 text-gray-400" />
@@ -557,44 +663,7 @@ export default function FacilityDashboard() {
               ))}
             </div>
           </div>
-
-          {/* Quick Actions */}
-          <div className="bg-white rounded-xl drop-shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Quick Actions
-              </h2>
-              <ClipboardDocumentCheckIcon className="h-5 w-5 text-gray-400" />
-            </div>
-            <div className="space-y-3">
-              <Button
-                disabled={!isApproved}
-                className={`w-full flex items-center justify-center space-x-2 py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors ${
-                  !isApproved ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                <UserGroupIcon className="h-5 w-5" />
-                <span>Manage Staff</span>
-              </Button>
-              <Button
-                disabled={!isApproved}
-                className={`w-full flex items-center justify-center space-x-2 py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors ${
-                  !isApproved ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                <CalendarIcon className="h-5 w-5" />
-                <span>View Appointments</span>
-              </Button>
-              <Button
-                disabled={!isApproved}
-                className={`w-full flex items-center justify-center space-x-2 py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors ${
-                  !isApproved ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                <UserIcon className="h-5 w-5" />
-                <span>Manage Roles</span>
-              </Button>
-            </div>
+        </div>
           </div>
         </div>
       </div>

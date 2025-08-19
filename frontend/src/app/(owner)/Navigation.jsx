@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/hooks/auth.jsx";
 import { Menu, X } from "lucide-react";
-import ApplicationLogo from "@/components/ApplicationLogo.jsx";
+import IconLogo from "@/components/IconLogo.jsx";
 
 const Navigation = ({ user }) => {
   const pathname = usePathname();
@@ -65,17 +65,17 @@ const Navigation = ({ user }) => {
     <>
       {/* Top Navigation Bar - Only on mobile (<1024px) */}
       {isMobile && (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg h-16 flex items-center justify-between px-4">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-slate-800 shadow-lg h-16 flex items-center justify-between px-4">
           <div className="flex items-center">
             <button
               onClick={toggleSidebar}
-              className="p-2 rounded-md hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-md hover:bg-slate-700 transition-colors"
               aria-label={isOpen ? "Close menu" : "Open menu"}
             >
               {isOpen ? (
-                <X size={24} className="text-gray-800" />
+                <X size={24} className="text-white" />
               ) : (
-                <Menu size={24} className="text-gray-800" />
+                <Menu size={24} className="text-white" />
               )}
             </button>
           </div>
@@ -84,10 +84,10 @@ const Navigation = ({ user }) => {
           <div className="relative">
             <button
               onClick={toggleDropdown}
-              className="flex items-center p-2 rounded-lg"
+              className="flex items-center p-2 rounded-lg hover:bg-slate-700 transition-colors"
             >
               <div className="flex-shrink-0">
-                <div className="h-10 w-10 rounded-full flex items-center justify-center font-medium bg-slate-100 text-slate-700">
+                <div className="h-10 w-10 rounded-full flex items-center justify-center font-medium bg-slate-600 text-white">
                   {user?.firstname?.charAt(0) || "U"}
                 </div>
               </div>
@@ -184,7 +184,7 @@ const Navigation = ({ user }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 bg-white drop-shadow-lg transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 z-40 bg-slate-800 drop-shadow-lg transition-transform duration-300 ease-in-out ${
           isMobile
             ? isOpen
               ? "translate-x-0 w-72"
@@ -194,18 +194,17 @@ const Navigation = ({ user }) => {
       >
         <div className="flex flex-col h-full">
           {/* Header Section */}
-          <div className="bg-white border-b border-gray-100 p-6">
-            <div className="flex items-center space-x-3">
-              
+          <div className="bg-slate-800 border-b border-slate-700 p-6">
+            <div className="flex items-center justify-center space-x-3">
+              <IconLogo size="h-10 w-10" iconSize="h-6 w-6" />
               <div>
-                <h1 className="text-lg font-semibold text-gray-900">
+                <h1 className="text-lg font-semibold text-white">
                   Owner Panel
                 </h1>
-                <p className="text-xs text-gray-500 font-medium">
+                <p className="text-xs text-slate-300 font-medium">
                   Management System
                 </p>
               </div>
-              
             </div>
           </div>
 
@@ -306,8 +305,8 @@ const Navigation = ({ user }) => {
                       onClick={handleNavClick}
                       className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
                         pathname === item.href
-                          ? "bg-slate-100 text-slate-900 font-medium"
-                          : "text-gray-700 hover:bg-gray-50 hover:text-slate-900"
+                          ? "bg-slate-700 text-white font-medium"
+                          : "text-slate-300 hover:bg-slate-700 hover:text-white"
                       }`}
                     >
                       <svg
@@ -338,11 +337,11 @@ const Navigation = ({ user }) => {
 
           {/* User Profile - Only at lg and above */}
           {!isMobile && (
-            <div className="px-4 py-4 border-t border-gray-100">
+            <div className="px-4 py-4 border-t border-slate-700">
               <div className="relative">
                 <button
                   onClick={toggleDropdown}
-                  className="flex items-center w-full p-2 rounded-lg"
+                  className="flex items-center w-full p-2 rounded-lg hover:bg-slate-700 transition-colors"
                 >
                   <div className="flex-shrink-0">
                     <div className="h-10 w-10 rounded-full flex items-center justify-center font-medium bg-slate-100 text-slate-700">
@@ -350,15 +349,15 @@ const Navigation = ({ user }) => {
                     </div>
                   </div>
                   <div className="ml-3 text-left">
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-white">
                       {user?.firstname}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-slate-300">
                       Owner
                     </p>
                   </div>
                   <svg
-                    className={`ml-auto h-5 w-5 text-gray-400 transition-transform duration-200 ${
+                    className={`ml-auto h-5 w-5 text-slate-400 transition-transform duration-200 ${
                       isDropdownOpen ? "rotate-180" : ""
                     }`}
                     fill="none"

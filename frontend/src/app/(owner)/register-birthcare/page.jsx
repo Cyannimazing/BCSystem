@@ -157,50 +157,70 @@ export default function RegisterBirthcare() {
   // No active subscription
   if (!hasActiveSubscription && !subscriptionError) {
     return (
-      <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
-          Subscription Required
-        </h1>
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg
-                className="h-5 w-5 text-yellow-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
+      <div className="min-h-screen w-full flex flex-col bg-gray-50">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 max-w-2xl mx-auto">
+            {/* Header Section */}
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 px-6 py-4 border-b border-gray-200">
+              <div className="flex items-center justify-center text-center">
+                <svg
+                  className="h-8 w-8 text-yellow-500 mr-2 flex-shrink-0"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Subscription Required
+                </h2>
+              </div>
             </div>
-            <div className="ml-3">
-              <p className="text-sm text-yellow-700">
-                You need an active subscription to register a birthcare
-                facility.
-              </p>
+
+            {/* Content Section */}
+            <div className="px-6 py-8">
+              <div className="text-center">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                  <p className="text-yellow-800 mb-4">
+                    You need an active subscription to register a birthcare facility.
+                  </p>
+                  <Button
+                    onClick={() => router.push("/subscription")}
+                    className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-medium"
+                  >
+                    Subscribe Now
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex justify-center">
-          <Button
-            onClick={() => router.push("/owner/subscription")}
-            className="bg-indigo-600 hover:bg-indigo-700"
-          >
-            Subscribe Now
-          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
-        Register Your Birthcare Facility
-      </h1>
+    <div className="min-h-screen w-full bg-gray-50 py-8">
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+          {/* Header Section */}
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-center text-center">
+              <svg className="h-8 w-8 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h3M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              <h1 className="text-xl font-semibold text-gray-900">
+                Register Your Birthcare Facility
+              </h1>
+            </div>
+          </div>
+
+          {/* Content Section */}
+          <div className="px-6 py-6">
+            <div className="mx-auto">
 
       {/* Success message */}
       {successMessage && (
@@ -409,9 +429,7 @@ export default function RegisterBirthcare() {
 
           <Button
             type="submit"
-            className={`${
-              isSubmitting ? "opacity-75 cursor-not-allowed" : ""
-            } bg-indigo-600 hover:bg-indigo-700`}
+            className={isSubmitting ? "opacity-75 cursor-not-allowed" : ""}
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -443,7 +461,11 @@ export default function RegisterBirthcare() {
             )}
           </Button>
         </div>
-      </form>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

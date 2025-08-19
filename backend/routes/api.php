@@ -75,4 +75,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/birthcare/{birthcare_id}/staff/{staff}', [\App\Http\Controllers\Staff\StaffController::class, 'show']);
     Route::put('/birthcare/{birthcare_id}/staff/{staff}', [\App\Http\Controllers\Staff\StaffController::class, 'update']);
     Route::delete('/birthcare/{birthcare_id}/staff/{staff}', [\App\Http\Controllers\Staff\StaffController::class, 'destroy']);
+    
+    // Patient management routes
+    Route::get('/birthcare/{birthcare_id}/patients', [\App\Http\Controllers\Staff\PatientController::class, 'index']);
+    Route::post('/birthcare/{birthcare_id}/patients', [\App\Http\Controllers\Staff\PatientController::class, 'store']);
+    Route::get('/birthcare/{birthcare_id}/patients/{patient}', [\App\Http\Controllers\Staff\PatientController::class, 'show']);
+    Route::put('/birthcare/{birthcare_id}/patients/{patient}', [\App\Http\Controllers\Staff\PatientController::class, 'update']);
+    Route::delete('/birthcare/{birthcare_id}/patients/{patient}', [\App\Http\Controllers\Staff\PatientController::class, 'destroy']);
+    
+    // Prenatal scheduling routes
+    Route::get('/birthcare/{birthcare_id}/prenatal-calendar', [\App\Http\Controllers\Staff\PatientController::class, 'getCalendarData']);
+    Route::get('/birthcare/{birthcare_id}/todays-visits', [\App\Http\Controllers\Staff\PatientController::class, 'getTodaysVisits']);
 });

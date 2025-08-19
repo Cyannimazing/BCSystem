@@ -29,9 +29,9 @@ const AppLayout = ({ children }) => {
 
   // Render admin layout for users with system_role_id === 1
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       <Navigation user={user} />
-      <main>{children}</main>
+      <main className="lg:ml-72 transition-all duration-300 pt-16 lg:pt-0">{children}</main>
     </div>
   );
 };

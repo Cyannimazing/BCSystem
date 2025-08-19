@@ -59,7 +59,8 @@ class BirthcareApplicationController extends Controller
 
         // Process applications to include document URLs
         foreach ($applications as $application) {
-            // Format user name
+            // Add user property for frontend compatibility (since frontend expects 'user' not 'owner')
+            $application->user = $application->owner;
             $application->user->name = $application->owner->firstname . ' ' . $application->owner->lastname;
             
             // Add document URLs for frontend
