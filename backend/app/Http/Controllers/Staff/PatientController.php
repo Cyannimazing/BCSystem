@@ -30,6 +30,7 @@ class PatientController extends Controller
                 $q->where('first_name', 'like', "%{$search}%")
                   ->orWhere('last_name', 'like', "%{$search}%")
                   ->orWhere('middle_name', 'like', "%{$search}%")
+                  ->orWhere('contact_number', 'like', "%{$search}%")
                   ->orWhereRaw("CONCAT(first_name, ' ', COALESCE(middle_name, ''), ' ', last_name) LIKE ?", ["%{$search}%"]);
             });
         }
@@ -165,14 +166,19 @@ class PatientController extends Controller
      */
     public function getCalendarData(Request $request, $birthcare_id)
     {
-        $startDate = $request->get('start', now()->startOfMonth());
-        $endDate = $request->get('end', now()->endOfMonth());
+        // Parse the date parameters and ensure they're in the correct format
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->toDateString());
+        $endDate = $request->get('end', Carbon::now()->endOfMonth()->toDateString());
+        
+        // Convert to Carbon instances to ensure proper date handling
+        $startCarbon = Carbon::parse($startDate)->startOfDay();
+        $endCarbon = Carbon::parse($endDate)->endOfDay();
 
         $visits = PrenatalVisit::whereHas('patient', function($query) use ($birthcare_id) {
                                     $query->where('birth_care_id', $birthcare_id);
                                 })
                                ->with(['patient:id,first_name,middle_name,last_name,contact_number'])
-                               ->whereBetween('scheduled_date', [$startDate, $endDate])
+                               ->whereBetween('scheduled_date', [$startCarbon->toDateString(), $endCarbon->toDateString()])
                                ->orderBy('scheduled_date')
                                ->get();
 
@@ -184,11 +190,14 @@ class PatientController extends Controller
      */
     public function getTodaysVisits($birthcare_id)
     {
+        // Get today's date in the application timezone
+        $today = Carbon::today();
+        
         $todaysVisits = PrenatalVisit::whereHas('patient', function($query) use ($birthcare_id) {
                                           $query->where('birth_care_id', $birthcare_id);
                                       })
                                      ->with(['patient:id,first_name,middle_name,last_name,contact_number,address'])
-                                     ->whereDate('scheduled_date', today())
+                                     ->whereDate('scheduled_date', $today->toDateString())
                                      ->where('status', 'Scheduled')
                                      ->orderBy('scheduled_date')
                                      ->get();

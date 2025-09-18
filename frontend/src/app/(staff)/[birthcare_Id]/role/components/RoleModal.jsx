@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Label from "@/components/Label";
@@ -113,9 +114,15 @@ const RoleModal = ({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+  const modalContent = (
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      style={{
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        backdropFilter: 'blur(2px)',
+      }}
+    >
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto mx-4">
         <div className="border-b px-6 py-4">
           <h3 className="text-lg font-medium text-gray-900">
             {isEdit ? "Edit Role" : "Create New Role"}
@@ -186,30 +193,32 @@ const RoleModal = ({
           </div>
 
           <div className="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
-            <Button
+            <button
               type="button"
               onClick={onClose}
-              className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
               disabled={isSubmitting}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
-            </Button>
-            <Button
+            </button>
+            <button
               type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white"
               disabled={isSubmitting}
+              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting
                 ? "Saving..."
                 : isEdit
                 ? "Update Role"
                 : "Create Role"}
-            </Button>
+            </button>
           </div>
         </form>
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
 
 export default RoleModal;

@@ -48,6 +48,12 @@ const Home = () => {
                 Services
               </a>
               <a
+                href="/templates"
+                className="font-medium text-[#555] transition-colors duration-300 hover:text-[#ff6b6b] "
+              >
+                Templates
+              </a>
+              <a
                 href="#pricing"
                 className="font-medium text-[#555] transition-colors duration-300 hover:text-[#ff6b6b] "
               >
@@ -113,6 +119,12 @@ const Home = () => {
                 Services
               </a>
               <a
+                href="/templates"
+                className="block px-4 py-3 font-medium hover:bg-[#f9f9f9] hover:text-[#ff6b6b] "
+              >
+                Templates
+              </a>
+              <a
                 href="#pricing"
                 className="block px-4 py-3 font-medium hover:bg-[#f9f9f9] hover:text-[#ff6b6b] "
               >
@@ -171,7 +183,7 @@ const Home = () => {
             Our Services
             <span className="mx-auto mt-4 block h-1 w-24 bg-[#ff6b6b]"></span>
           </h2>
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-4">
             <div className="transform rounded-xl border-0 bg-white p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#ffe0e0]">
                 <svg
@@ -245,6 +257,31 @@ const Home = () => {
               <p className="text-center text-gray-600">
                 Help and care during the recovery period and early days with
                 your newborn.
+              </p>
+            </div>
+            <div className="transform rounded-xl border-0 bg-white p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f0e6ff]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-[#9d4edd]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+              </div>
+              <h3 className="mb-4 text-center text-2xl font-bold">
+                Medical Templates
+              </h3>
+              <p className="text-center text-gray-600">
+                Professional templates for birth certificates, vaccination records,
+                and medical documentation.
               </p>
             </div>
           </div>

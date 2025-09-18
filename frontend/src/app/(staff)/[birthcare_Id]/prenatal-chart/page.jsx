@@ -36,11 +36,21 @@ const PrenatalChartPage = () => {
       setLoading(true);
       setError(null);
       
+      // Create date strings without timezone conversion issues
+      const year = selectedDate.getFullYear();
+      const month = selectedDate.getMonth();
+      const startMonth = (month + 1).toString().padStart(2, '0');
+      const endMonth = (month + 1).toString().padStart(2, '0');
+      const lastDay = new Date(year, month + 1, 0).getDate().toString().padStart(2, '0');
+      
+      const startDate = `${year}-${startMonth}-01`;
+      const endDate = `${year}-${endMonth}-${lastDay}`;
+      
       const [calendarResponse, todaysResponse] = await Promise.all([
         axios.get(`/api/birthcare/${birthcare_Id}/prenatal-calendar`, {
           params: {
-            start: new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1).toISOString().split('T')[0],
-            end: new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0).toISOString().split('T')[0]
+            start: startDate,
+            end: endDate
           },
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -113,8 +123,11 @@ const PrenatalChartPage = () => {
   };
 
   const getVisitsForDate = (day) => {
-    const dateStr = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day)
-      .toISOString().split('T')[0];
+    // Create date string without timezone conversion
+    const year = selectedDate.getFullYear();
+    const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+    const dayStr = day.toString().padStart(2, '0');
+    const dateStr = `${year}-${month}-${dayStr}`;
     
     const visits = calendarData.filter(visit => {
       // Handle both formats: "2025-08-05" and "2025-08-05T00:00:00.000000Z"

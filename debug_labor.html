@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labor Monitoring Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin: 10px 0;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+        input, button {
+            padding: 8px;
+            margin: 4px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .response {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <h1>Labor Monitoring API Debug Tool</h1>
+    
+    <div>
+        <h2>API Configuration</h2>
+        <div class="form-group">
+            <label>Backend URL:</label>
+            <input type="text" id="backendUrl" value="http://localhost:8000" placeholder="Backend URL">
+        </div>
+        <div class="form-group">
+            <label>Birth Care ID:</label>
+            <input type="text" id="birthcareId" value="1" placeholder="Birth Care ID">
+        </div>
+        <button onclick="testApiConnection()">Test API Connection</button>
+    </div>
+
+    <div>
+        <h2>Get Patients</h2>
+        <button onclick="fetchPatients()">Fetch Patients</button>
+        <div id="patientsResponse" class="response" style="display: none;"></div>
+    </div>
+
+    <div>
+        <h2>Get Labor Monitoring Entries</h2>
+        <div class="form-group">
+            <label>Patient ID:</label>
+            <input type="text" id="patientId" value="1" placeholder="Patient ID">
+        </div>
+        <button onclick="fetchMonitoringEntries()">Fetch Entries</button>
+        <div id="entriesResponse" class="response" style="display: none;"></div>
+    </div>
+
+    <div>
+        <h2>Add Labor Monitoring Entry</h2>
+        <div class="form-group">
+            <label>Patient ID:</label>
+            <input type="text" id="newPatientId" value="1" placeholder="Patient ID">
+        </div>
+        <div class="form-group">
+            <label>Date:</label>
+            <input type="date" id="monitoringDate" value="">
+        </div>
+        <div class="form-group">
+            <label>Time:</label>
+            <input type="time" id="monitoringTime" value="">
+        </div>
+        <div class="form-group">
+            <label>Temperature:</label>
+            <input type="text" id="temperature" value="36.5" placeholder="36.5">
+        </div>
+        <div class="form-group">
+            <label>Pulse:</label>
+            <input type="text" id="pulse" value="80" placeholder="80">
+        </div>
+        <div class="form-group">
+            <label>Respiration:</label>
+            <input type="text" id="respiration" value="18" placeholder="18">
+        </div>
+        <div class="form-group">
+            <label>Blood Pressure:</label>
+            <input type="text" id="bloodPressure" value="120/80" placeholder="120/80">
+        </div>
+        <div class="form-group">
+            <label>FHT Location:</label>
+            <input type="text" id="fhtLocation" value="Left lower quadrant" placeholder="FHT Location">
+        </div>
+        <button onclick="addMonitoringEntry()">Add Entry</button>
+        <div id="addResponse" class="response" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Set default date and time
+        document.getElementById('monitoringDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('monitoringTime').value = new Date().toTimeString().slice(0, 5);
+
+        function showResponse(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.textContent = JSON.stringify(data, null, 2);
+            element.className = isError ? 'response error' : 'response success';
+        }
+
+        async function makeApiRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        ...options.headers
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${JSON.stringify(data)}`);
+                }
+                
+                return data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        async function testApiConnection() {
+            const backendUrl = document.getElementById('backendUrl').value;
+            try {
+                const response = await fetch(`${backendUrl}/api/user`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                if (response.ok) {
+                    alert('✓ API Connection successful');
+                } else if (response.status === 401) {
+                    alert('⚠ API reachable but not authenticated (this is expected)');
+                } else {
+                    alert(`✗ API Error: ${response.status}`);
+                }
+            } catch (error) {
+                alert(`✗ Connection failed: ${error.message}`);
+            }
+        }
+
+        async function fetchPatients() {
+            const backendUrl = document.getElementById('backendUrl').value;
+            const birthcareId = document.getElementById('birthcareId').value;
+            
+            try {
+                const data = await makeApiRequest(`${backendUrl}/api/birthcare/${birthcareId}/patients`);
+                showResponse('patientsResponse', data);
+            } catch (error) {
+                showResponse('patientsResponse', { error: error.message }, true);
+            }
+        }
+
+        async function fetchMonitoringEntries() {
+            const backendUrl = document.getElementById('backendUrl').value;
+            const birthcareId = document.getElementById('birthcareId').value;
+            const patientId = document.getElementById('patientId').value;
+            
+            try {
+                const data = await makeApiRequest(`${backendUrl}/api/birthcare/${birthcareId}/labor-monitoring?patient_id=${patientId}`);
+                showResponse('entriesResponse', data);
+            } catch (error) {
+                showResponse('entriesResponse', { error: error.message }, true);
+            }
+        }
+
+        async function addMonitoringEntry() {
+            const backendUrl = document.getElementById('backendUrl').value;
+            const birthcareId = document.getElementById('birthcareId').value;
+            
+            const entryData = {
+                patient_id: document.getElementById('newPatientId').value,
+                monitoring_date: document.getElementById('monitoringDate').value,
+                monitoring_time: document.getElementById('monitoringTime').value,
+                temperature: document.getElementById('temperature').value,
+                pulse: document.getElementById('pulse').value,
+                respiration: document.getElementById('respiration').value,
+                blood_pressure: document.getElementById('bloodPressure').value,
+                fht_location: document.getElementById('fhtLocation').value
+            };
+            
+            try {
+                const data = await makeApiRequest(`${backendUrl}/api/birthcare/${birthcareId}/labor-monitoring`, {
+                    method: 'POST',
+                    body: JSON.stringify(entryData)
+                });
+                showResponse('addResponse', data);
+            } catch (error) {
+                showResponse('addResponse', { error: error.message }, true);
+            }
+        }
+    </script>
+</body>
+</html>

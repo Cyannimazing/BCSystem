@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useParams } from "next/navigation";
 import axios from "@/lib/axios";
 import Button from "@/components/Button";
@@ -57,6 +58,30 @@ const StaffPage = () => {
 
     fetchData();
   }, [birthcare_Id]);
+
+  // Effect to add/remove blur effect to entire app layout
+  useEffect(() => {
+    const appLayout = document.getElementById('app-layout');
+    const anyModalOpen = showStaffModal || showDeleteModal;
+    
+    if (anyModalOpen && appLayout) {
+      appLayout.style.filter = 'blur(4px)';
+      appLayout.style.pointerEvents = 'none';
+      document.body.style.overflow = 'hidden';
+    } else if (appLayout) {
+      appLayout.style.filter = 'none';
+      appLayout.style.pointerEvents = 'auto';
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      if (appLayout) {
+        appLayout.style.filter = 'none';
+        appLayout.style.pointerEvents = 'auto';
+        document.body.style.overflow = 'unset';
+      }
+    };
+  }, [showStaffModal, showDeleteModal]);
 
   // Create a new staff member
   const handleCreateStaff = async (staffData) => {

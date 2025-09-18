@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useParams } from "next/navigation";
 import axios from "@/lib/axios";
 import Button from "@/components/Button";
@@ -149,6 +150,28 @@ const RolePage = () => {
     setCurrentRole(role);
     setShowDeleteModal(true);
   };
+
+  // Handle blur effect when modals are open
+  useEffect(() => {
+    const appLayout = document.getElementById('app-layout');
+    if (!appLayout) return;
+
+    if (showRoleModal || showDeleteModal) {
+      appLayout.style.filter = 'blur(4px)';
+      appLayout.style.pointerEvents = 'none';
+      document.body.style.overflow = 'hidden';
+    } else {
+      appLayout.style.filter = 'none';
+      appLayout.style.pointerEvents = 'auto';
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      appLayout.style.filter = 'none';
+      appLayout.style.pointerEvents = 'auto';
+      document.body.style.overflow = 'auto';
+    };
+  }, [showRoleModal, showDeleteModal]);
 
   // Filter roles based on search term
   const filteredRoles = roles.filter((role) =>

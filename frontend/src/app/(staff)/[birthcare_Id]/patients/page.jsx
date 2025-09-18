@@ -1,15 +1,15 @@
 "use client";
 import { useAuth } from "@/hooks/auth";
 import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { Plus, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { useParams } from "next/navigation";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import axios from '@/lib/axios';
 
 const PatientListPage = () => {
   const { user } = useAuth({ middleware: "auth" });
   const { birthcare_Id } = useParams();
-  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [patients, setPatients] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -26,13 +26,8 @@ const PatientListPage = () => {
       
       const response = await axios.get(`/api/birthcare/${birthcare_Id}/patients`, {
         params: {
-          search: searchTerm,
+          search: debouncedSearchTerm,
           page: currentPage
-        },
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
         }
       });
       
@@ -40,19 +35,35 @@ const PatientListPage = () => {
       setTotalPages(response.data.last_page || 0);
     } catch (err) {
       console.error('Error fetching patients:', err);
-      setError('Failed to load patients. Please try again.');
+      console.error('Error details:', {
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+        user: user,
+        birthcare_Id: birthcare_Id
+      });
+      setError(`Failed to load patients. Status: ${err.response?.status || 'Unknown'}. Please try again.`);
       setPatients([]);
     } finally {
       setLoading(false);
     }
   };
 
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   // Fetch patients when component mounts or dependencies change
   useEffect(() => {
     if (user && birthcare_Id) {
       fetchPatients();
     }
-  }, [user, birthcare_Id, currentPage, searchTerm]);
+  }, [user, birthcare_Id, currentPage, debouncedSearchTerm]);
 
   if (!user) {
     return (
@@ -76,10 +87,6 @@ const PatientListPage = () => {
     );
   }
 
-  const handleAddPatient = () => {
-    router.push(`/${birthcare_Id}/patients/add`);
-  };
-
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -92,10 +99,10 @@ const PatientListPage = () => {
     }
   };
 
-  // Reset to first page when search term changes
+  // Reset to first page when debounced search term changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [debouncedSearchTerm]);
 
   // Handle loading and error states
   if (loading && patients.length === 0) {
@@ -130,18 +137,10 @@ const PatientListPage = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 min-h-[calc(100vh-4rem)]">
           <div className="px-6 py-6 h-full flex flex-col">
             {/* Header */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="mb-6">
               <div>
                 <h1 className="text-2xl font-semibold text-gray-900">Patient List</h1>
-                <p className="text-gray-600 mt-1">Manage all patients and their pre-natal information</p>
               </div>
-              <button
-                onClick={handleAddPatient}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
-              >
-                <Plus size={20} className="mr-2" />
-                Add Patient
-              </button>
             </div>
 
             {/* Search Bar */}
@@ -175,7 +174,8 @@ const PatientListPage = () => {
             <div className="mb-4">
               <p className="text-sm text-gray-600">
                 Showing {patients.length} patients
-                {searchTerm && ` for "${searchTerm}"`}
+                {debouncedSearchTerm && ` for "${debouncedSearchTerm}"`}
+                {searchTerm !== debouncedSearchTerm && ' (Searching...)'}
                 {loading && ' (Loading...)'}
               </p>
             </div>
@@ -190,16 +190,16 @@ const PatientListPage = () => {
                         Patient Name
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Facility
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Age
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Civil Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Contact
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        LMP
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        EDC
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
@@ -227,16 +227,16 @@ const PatientListPage = () => {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {patient.facility_name || 'N/A'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {patient.age}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {patient.contact_number}
+                            {patient.civil_status}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {patient.lmp ? new Date(patient.lmp).toLocaleDateString() : 'N/A'}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {patient.edc ? new Date(patient.edc).toLocaleDateString() : 'N/A'}
+                            {patient.contact_number || 'N/A'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(patient.status)}`}>
@@ -249,7 +249,7 @@ const PatientListPage = () => {
                       <tr>
                         <td colSpan="6" className="px-6 py-12 text-center">
                           <div className="text-gray-500">
-                            {searchTerm ? (
+                            {debouncedSearchTerm ? (
                               <>
                                 <p className="text-lg font-medium mb-2">No patients found</p>
                                 <p>Try adjusting your search terms or clear the search to see all patients.</p>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import Button from "@/components/Button";
 
 /**
@@ -33,11 +34,18 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, staffName }) => {
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof document === 'undefined') return null;
 
-  return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+  return createPortal(
+    <div 
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4"
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
+      onClick={onClose}
+    >
+      <div 
+        className="relative bg-white rounded-xl shadow-2xl w-full max-w-md"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="p-6">
           <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
             <svg
@@ -72,26 +80,27 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, staffName }) => {
           )}
           
           <div className="flex justify-center space-x-3">
-            <Button
+            <button
               type="button"
               onClick={onClose}
-              className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               disabled={isDeleting}
             >
               Cancel
-            </Button>
-            <Button 
+            </button>
+            <button
               type="button"
               onClick={handleConfirm}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               disabled={isDeleting}
             >
               {isDeleting ? 'Removing...' : 'Remove Staff'}
-            </Button>
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

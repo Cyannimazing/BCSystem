@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Label from "@/components/Label";
 import InputError from "@/components/InputError";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 /**
  * Modal component for creating and editing staff members
@@ -127,15 +129,28 @@ const StaffModal = ({ isOpen, onClose, onSubmit, staff, roles, isEdit }) => {
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof document === 'undefined') return null;
 
-  return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="border-b px-6 py-4">
-          <h3 className="text-lg font-medium text-gray-900">
+  return createPortal(
+    <div 
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4"
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
+      onClick={onClose}
+    >
+      <div 
+        className="relative bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900">
             {isEdit ? "Edit Staff Member" : "Add New Staff Member"}
           </h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <XMarkIcon className="h-6 w-6" />
+          </button>
         </div>
         
         <form onSubmit={handleSubmit}>
@@ -276,25 +291,26 @@ const StaffModal = ({ isOpen, onClose, onSubmit, staff, roles, isEdit }) => {
           </div>
           
           <div className="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
-            <Button
+            <button
               type="button"
               onClick={onClose}
-              className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               disabled={isSubmitting}
             >
               Cancel
-            </Button>
-            <Button 
+            </button>
+            <button
               type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Saving...' : isEdit ? 'Update Staff' : 'Add Staff'}
-            </Button>
+            </button>
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

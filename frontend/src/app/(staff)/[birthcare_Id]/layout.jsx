@@ -2,8 +2,8 @@
 
 import { useAuth } from "@/hooks/auth.jsx";
 import Loading from "@/components/Loading.jsx";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useParams, useRouter, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import Navigation from "./Navigation";
 
 const AppLayout = ({ children }) => {
@@ -40,7 +40,7 @@ const AppLayout = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen bg-gray-50 transition-all duration-300`} id="app-layout">
       <Navigation user={user} />
       <main className="lg:ml-72 transition-all duration-300 pt-16 lg:pt-0">{children}</main>
     </div>
