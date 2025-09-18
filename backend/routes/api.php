@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\BirthcareApplicationController;
 use App\Http\Controllers\Owner\BirthcareController;
 use App\Http\Controllers\Staff\BirthCareRoleController;
 use App\Http\Controllers\Staff\PermissionController;
+use App\Http\Controllers\Staff\RoomController;
 use App\Http\Controllers\SubscriptionPlanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,8 +26,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     }
     return $user;
 });
-
-
     
 Route::get('/plans', [SubscriptionPlanController::class, 'index']);
 Route::get('/plans/{plan}', [SubscriptionPlanController::class, 'show']);
@@ -158,5 +157,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/birthcare/{birthcare_id}/labor-monitoring/{entry}', [\App\Http\Controllers\LaborMonitoringController::class, 'show']);
     Route::put('/birthcare/{birthcare_id}/labor-monitoring/{entry}', [\App\Http\Controllers\LaborMonitoringController::class, 'update']);
     Route::delete('/birthcare/{birthcare_id}/labor-monitoring/{entry}', [\App\Http\Controllers\LaborMonitoringController::class, 'destroy']);
+    
+    // Room management routes
+    Route::get('/birthcare/{birthcare_Id}/rooms', [RoomController::class, 'index']);
+    Route::post('/birthcare/{birthcare_Id}/rooms', [RoomController::class, 'store']);
+    Route::get('/birthcare/{birthcare_Id}/rooms/{room}', [RoomController::class, 'show']);
+    Route::put('/birthcare/{birthcare_Id}/rooms/{room}', [RoomController::class, 'update']);
+    Route::delete('/birthcare/{birthcare_Id}/rooms/{room}', [RoomController::class, 'destroy']);
+    Route::get('/birthcare/{birthcare_Id}/rooms/{roomId}/beds', [RoomController::class, 'getBeds']);
     
 });

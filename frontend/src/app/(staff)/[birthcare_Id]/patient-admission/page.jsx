@@ -9,6 +9,9 @@ const PatientAdmissionPage = () => {
   const { birthcare_Id } = useParams();
   const { user } = useAuth({ middleware: "auth" });
   const [patients, setPatients] = useState([]);
+  const [rooms, setRooms] = useState([]);
+  const [beds, setBeds] = useState([]);
+  const [loadingRooms, setLoadingRooms] = useState(false);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     patient_id: "",
@@ -30,6 +33,8 @@ const PatientAdmissionPage = () => {
     // Admission-specific fields
     attending_physician: "",
     primary_nurse: "",
+    room_id: "",
+    bed_id: "",
     room_number: "",
     bed_number: "",
     ward_section: "",
@@ -70,18 +75,72 @@ const PatientAdmissionPage = () => {
     }
   };
 
+  // Fetch rooms for dropdown
+  const fetchRooms = async () => {
+    try {
+      const response = await axios.get(
+        `/api/birthcare/${birthcare_Id}/rooms`
+      );
+      const roomsData = response.data.data || response.data;
+      setRooms(roomsData);
+    } catch (err) {
+      console.error("Failed to fetch rooms:", err);
+    }
+  };
+
+  // Fetch beds for selected room
+  const fetchBeds = async (roomId) => {
+    if (!roomId) {
+      setBeds([]);
+      return;
+    }
+    
+    console.log('Fetching beds for room ID:', roomId);
+    setLoadingRooms(true);
+    try {
+      const response = await axios.get(
+        `/api/birthcare/${birthcare_Id}/rooms/${roomId}/beds`
+      );
+      console.log('Beds API response:', response);
+      
+      const bedsData = response.data.data || response.data;
+      console.log('Processed beds data:', bedsData);
+      
+      setBeds(bedsData);
+    } catch (err) {
+      console.error("Failed to fetch beds:", err);
+      console.error("Error details:", err.response?.data || err.message);
+      setBeds([]);
+    } finally {
+      setLoadingRooms(false);
+    }
+  };
+
   useEffect(() => {
     if (user && birthcare_Id) {
       fetchPatients();
+      fetchRooms();
     }
   }, [user, birthcare_Id]);
 
   // Handle form input changes
   const handleFormChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+    const { name, value } = e.target;
+    
+    if (name === 'room_id') {
+      // When room changes, fetch beds for that room and clear bed selection
+      setFormData(prev => ({
+        ...prev,
+        room_id: value,
+        bed_id: ""
+      }));
+      fetchBeds(value);
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   // Fill sample data for testing
@@ -160,6 +219,8 @@ const PatientAdmissionPage = () => {
         height: "",
         attending_physician: "",
         primary_nurse: "",
+        room_id: "",
+        bed_id: "",
         room_number: "",
         bed_number: "",
         ward_section: "",
@@ -183,6 +244,7 @@ const PatientAdmissionPage = () => {
         status: "admitted",
         notes: "",
       });
+      setBeds([]);
       
     } catch (error) {
       console.error('Error creating admission:', error);
@@ -849,30 +911,50 @@ const PatientAdmissionPage = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Room Number
+                        Room
                       </label>
-                      <input
-                        type="text"
-                        name="room_number"
-                        value={formData.room_number}
+                      <select
+                        name="room_id"
+                        value={formData.room_id}
                         onChange={handleFormChange}
-                        placeholder="e.g., 101"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
+                      >
+                        <option value="">-- Select a room --</option>
+                        {rooms.map((room) => (
+                          <option key={room.id} value={room.id}>
+                            {room.name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Bed Number
+                        Bed
                       </label>
-                      <input
-                        type="text"
-                        name="bed_number"
-                        value={formData.bed_number}
+                      <select
+                        name="bed_id"
+                        value={formData.bed_id}
                         onChange={handleFormChange}
-                        placeholder="e.g., A1"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
+                        disabled={!formData.room_id || loadingRooms}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      >
+                        <option value="">-- Select a bed --</option>
+                        {beds
+                          .filter(bed => !bed.is_occupied)
+                          .map((bed) => (
+                            <option key={bed.id} value={bed.id}>
+                              Bed {bed.bed_no}
+                            </option>
+                          ))
+                        }
+                      </select>
+                      {loadingRooms && (
+                        <div className="mt-2 text-sm text-gray-500 flex items-center">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                          Loading beds...
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -916,6 +998,8 @@ const PatientAdmissionPage = () => {
                         height: "",
                         attending_physician: "",
                         primary_nurse: "",
+                        room_id: "",
+                        bed_id: "",
                         room_number: "",
                         bed_number: "",
                         ward_section: "",
@@ -939,6 +1023,7 @@ const PatientAdmissionPage = () => {
                         status: "admitted",
                         notes: "",
                       });
+                      setBeds([]);
                     }}
                     className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                   >

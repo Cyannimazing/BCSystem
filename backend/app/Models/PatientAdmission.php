@@ -29,8 +29,10 @@ class PatientAdmission extends Model
         'initial_diagnosis',
         'treatment_plan',
         'attending_physician',
-        'room_number',
-        'bed_number',
+        'room_number', // Legacy field
+        'bed_number',  // Legacy field
+        'room_id',     // New foreign key
+        'bed_id',      // New foreign key
         'status',
         'notes',
         'admitted_by',
@@ -57,6 +59,16 @@ class PatientAdmission extends Model
     public function admittedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'admitted_by');
+    }
+
+    public function room(): BelongsTo
+    {
+        return $this->belongsTo(Room::class);
+    }
+
+    public function bed(): BelongsTo
+    {
+        return $this->belongsTo(Bed::class);
     }
 
     // Scopes

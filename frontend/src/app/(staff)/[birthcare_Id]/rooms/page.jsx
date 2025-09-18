@@ -9,35 +9,16 @@ import Input from "@/components/Input";
 import Label from "@/components/Label";
 import InputError from "@/components/InputError";
 import { PlusIcon, PencilIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import axios from "@/lib/axios";
 
 const RoomsPage = () => {
   const { user } = useAuth({ middleware: "auth" });
   const { birthcare_Id } = useParams();
   
   // State management
-  const [rooms, setRooms] = useState([
-    // Mock data - replace with actual API calls later
-    { id: 1, name: "Room 101" },
-    { id: 2, name: "Room 102" },
-    { id: 3, name: "Room 201" },
-    { id: 4, name: "Room 202" },
-    { id: 5, name: "Room 301" },
-  ]);
-  
-  // Separate beds state to simulate the beds table
-  const [beds, setBeds] = useState([
-    // Mock bed data - each bed has id, bed_no, room_id
-    { id: 1, bed_no: 1, room_id: 1 },
-    { id: 2, bed_no: 2, room_id: 1 },
-    { id: 3, bed_no: 1, room_id: 2 },
-    { id: 4, bed_no: 1, room_id: 3 },
-    { id: 5, bed_no: 2, room_id: 3 },
-    { id: 6, bed_no: 3, room_id: 3 },
-    { id: 7, bed_no: 4, room_id: 3 },
-    { id: 8, bed_no: 1, room_id: 4 },
-    { id: 9, bed_no: 2, room_id: 4 },
-    { id: 10, bed_no: 1, room_id: 5 },
-  ]);
+  const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingError, setLoadingError] = useState(null);
   
   const [searchTerm, setSearchTerm] = useState("");
   
@@ -54,72 +35,78 @@ const RoomsPage = () => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Helper function to count beds for a room
-  const getBedCount = (roomId) => {
-    return beds.filter(bed => bed.room_id === roomId).length;
-  };
-  
-  // Helper function to get next bed ID
-  const getNextBedId = () => {
-    return beds.length > 0 ? Math.max(...beds.map(b => b.id)) + 1 : 1;
-  };
-  
-  // Helper function to create bed records for a room (for new rooms)
-  const createBedsForRoom = (roomId, bedCount) => {
-    const newBeds = [];
-    let nextBedId = getNextBedId();
-    
-    for (let i = 1; i <= bedCount; i++) {
-      newBeds.push({
-        id: nextBedId++,
-        bed_no: i,
-        room_id: roomId
-      });
-    }
-    
-    return newBeds;
-  };
-  
-  // Helper function to update bed records for existing room
-  const updateBedsForRoom = (roomId, newBedCount) => {
-    const currentBeds = beds.filter(bed => bed.room_id === roomId);
-    const currentBedCount = currentBeds.length;
-    const otherBeds = beds.filter(bed => bed.room_id !== roomId);
-    
-    if (newBedCount === currentBedCount) {
-      // No change needed
-      return beds;
-    } else if (newBedCount < currentBedCount) {
-      // Remove beds from highest bed_no
-      const sortedBeds = currentBeds.sort((a, b) => a.bed_no - b.bed_no);
-      const bedsToKeep = sortedBeds.slice(0, newBedCount);
-      return [...otherBeds, ...bedsToKeep];
-    } else {
-      // Add new beds starting from next bed number
-      const maxBedNo = currentBeds.length > 0 ? Math.max(...currentBeds.map(b => b.bed_no)) : 0;
-      const newBeds = [...currentBeds];
-      let nextBedId = getNextBedId();
-      
-      for (let i = maxBedNo + 1; i <= newBedCount; i++) {
-        newBeds.push({
-          id: nextBedId++,
-          bed_no: i,
-          room_id: roomId
-        });
+
+  // API Functions
+  const fetchRooms = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/birthcare/${birthcare_Id}/rooms`);
+      if (response.data.success) {
+        setRooms(response.data.data);
+        setLoadingError(null);
+      } else {
+        throw new Error(response.data.message || 'Failed to fetch rooms');
       }
-      
-      return [...otherBeds, ...newBeds];
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+      setLoadingError(error.response?.data?.message || error.message || 'Failed to fetch rooms');
+    } finally {
+      setLoading(false);
     }
   };
+
+  const createRoom = async (roomData) => {
+    try {
+      const response = await axios.post(`/api/birthcare/${birthcare_Id}/rooms`, roomData);
+      if (response.data.success) {
+        return response.data.data;
+      } else {
+        throw new Error(response.data.message || 'Failed to create room');
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const updateRoom = async (roomId, roomData) => {
+    try {
+      const response = await axios.put(`/api/birthcare/${birthcare_Id}/rooms/${roomId}`, roomData);
+      if (response.data.success) {
+        return response.data.data;
+      } else {
+        throw new Error(response.data.message || 'Failed to update room');
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const deleteRoom = async (roomId) => {
+    try {
+      const response = await axios.delete(`/api/birthcare/${birthcare_Id}/rooms/${roomId}`);
+      if (response.data.success) {
+        return true;
+      } else {
+        throw new Error(response.data.message || 'Failed to delete room');
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  // Load rooms on component mount
+  useEffect(() => {
+    if (user && birthcare_Id) {
+      fetchRooms();
+    }
+  }, [user, birthcare_Id]);
 
   // Initialize form data when editing
   useEffect(() => {
     if (currentRoom) {
-      const bedCount = getBedCount(currentRoom.id);
       setFormData({
         name: currentRoom.name || "",
-        beds: bedCount.toString()
+        beds: currentRoom.bed_count?.toString() || ""
       });
     } else {
       setFormData({
@@ -127,7 +114,7 @@ const RoomsPage = () => {
         beds: ""
       });
     }
-  }, [currentRoom, beds]);
+  }, [currentRoom]);
 
   // Filter rooms based on search
   const filteredRooms = rooms.filter(room =>
@@ -194,70 +181,48 @@ const RoomsPage = () => {
     }
     
     setIsSubmitting(true);
+    setErrors({});
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const bedCount = parseInt(formData.beds);
+      const roomData = {
+        name: formData.name.trim(),
+        beds: parseInt(formData.beds)
+      };
       
       if (isEdit && currentRoom) {
         // Update existing room
-        const roomData = {
-          name: formData.name.trim()
-        };
+        console.log('🔄 Updating room:', currentRoom.id, roomData);
+        const updatedRoom = await updateRoom(currentRoom.id, roomData);
         
-        const oldBedCount = getBedCount(currentRoom.id);
-        const updatedBeds = updateBedsForRoom(currentRoom.id, bedCount);
-        const bedsForThisRoom = updatedBeds.filter(bed => bed.room_id === currentRoom.id);
-        
-        // Console log for UPDATE operation
-        console.log('🔄 ROOM UPDATE OPERATION:');
-        console.log('Room Data:', {
-          id: currentRoom.id,
-          name: roomData.name,
-          old_bed_count: oldBedCount,
-          new_bed_count: bedCount
-        });
-        console.log('Bed Data for this room:', bedsForThisRoom);
-        console.log('All beds after update:', updatedBeds);
-        
-        // Update room name
+        // Update room in state
         setRooms(rooms.map(room => 
-          room.id === currentRoom.id 
-            ? { ...room, ...roomData }
-            : room
+          room.id === currentRoom.id ? updatedRoom : room
         ));
         
-        // Update beds using smart logic
-        setBeds(updatedBeds);
+        console.log('✅ Room updated successfully:', updatedRoom);
       } else {
         // Create new room
-        const newRoomId = rooms.length > 0 ? Math.max(...rooms.map(r => r.id)) + 1 : 1;
-        const newRoom = {
-          id: newRoomId,
-          name: formData.name.trim()
-        };
+        console.log('✅ Creating new room:', roomData);
+        const newRoom = await createRoom(roomData);
         
-        // Create bed records for the new room
-        const newBedsForRoom = createBedsForRoom(newRoomId, bedCount);
-        
-        // Console log for CREATE operation
-        console.log('✅ ROOM CREATE OPERATION:');
-        console.log('Room Data:', newRoom);
-        console.log('Bed Data:', newBedsForRoom);
-        console.log('Total beds count:', bedCount);
-        
-        // Add the new room
+        // Add new room to state
         setRooms([...rooms, newRoom]);
         
-        // Add bed records
-        setBeds([...beds, ...newBedsForRoom]);
+        console.log('✅ Room created successfully:', newRoom);
       }
       
       closeModal();
     } catch (error) {
-      setErrors({ submit: "Failed to save room. Please try again." });
+      console.error('Error saving room:', error);
+      
+      if (error.response?.data?.errors) {
+        // Handle validation errors from backend
+        setErrors(error.response.data.errors);
+      } else {
+        setErrors({ 
+          submit: error.response?.data?.message || error.message || "Failed to save room. Please try again." 
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -268,27 +233,18 @@ const RoomsPage = () => {
     if (!currentRoom) return;
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      console.log('🗑️ Deleting room:', currentRoom.id);
+      await deleteRoom(currentRoom.id);
       
-      const roomId = currentRoom.id;
-      const bedsToDelete = beds.filter(bed => bed.room_id === roomId);
+      // Remove the room from state
+      setRooms(rooms.filter(room => room.id !== currentRoom.id));
       
-      // Console log for DELETE operation
-      console.log('🗑️ ROOM DELETE OPERATION:');
-      console.log('Room Data:', currentRoom);
-      console.log('Beds to delete:', bedsToDelete);
-      console.log('Total beds deleted:', bedsToDelete.length);
-      
-      // Remove the room
-      setRooms(rooms.filter(room => room.id !== roomId));
-      
-      // Remove all beds associated with this room
-      setBeds(beds.filter(bed => bed.room_id !== roomId));
-      
+      console.log('✅ Room deleted successfully');
       closeDeleteModal();
     } catch (error) {
       console.error("Failed to delete room:", error);
+      // You might want to show an error message to the user here
+      alert(error.response?.data?.message || error.message || 'Failed to delete room');
     }
   };
 
@@ -348,7 +304,22 @@ const RoomsPage = () => {
 
         {/* Rooms Table */}
         <div className="bg-white shadow overflow-hidden rounded-lg">
-          {filteredRooms.length > 0 ? (
+          {loading ? (
+            <div className="py-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+              <p className="mt-2 text-sm text-gray-500">Loading rooms...</p>
+            </div>
+          ) : loadingError ? (
+            <div className="py-8 text-center text-red-500">
+              <p>Error: {loadingError}</p>
+              <button 
+                onClick={fetchRooms}
+                className="mt-2 text-indigo-600 hover:text-indigo-500 text-sm"
+              >
+                Try again
+              </button>
+            </div>
+          ) : filteredRooms.length > 0 ? (
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -382,7 +353,7 @@ const RoomsPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-500">
                         {(() => {
-                          const bedCount = getBedCount(room.id);
+                          const bedCount = room.bed_count || 0;
                           return `${bedCount} ${bedCount === 1 ? 'bed' : 'beds'}`;
                         })()}
                       </div>
@@ -550,7 +521,7 @@ const RoomsPage = () => {
               
               <p className="text-center text-gray-600 mb-6">
                 Are you sure you want to delete <span className="font-semibold">{currentRoom?.name}</span>? 
-                This will also delete all {getBedCount(currentRoom?.id || 0)} bed{getBedCount(currentRoom?.id || 0) === 1 ? '' : 's'} associated with this room.
+                This will also delete all {currentRoom?.bed_count || 0} bed{(currentRoom?.bed_count || 0) === 1 ? '' : 's'} associated with this room.
                 This action cannot be undone.
               </p>
               
